@@ -1,9 +1,9 @@
 """Test bootstrap.
 
-The plugin imports Hermes core (``agent``, ``tools``, ``hermes_cli``) from a checkout: set
-``HERMES_AGENT_REPO`` to your hermes-agent clone (default ``~/.hermes/hermes-agent``), or
-``pip install -e`` it. This repo is loaded as the package ``hermes_plugin_holographic`` — the same tree
-``hermes plugins install`` copies to ``$HERMES_HOME/plugins/holographic/``.
+The plugin imports Nastech core (``agent``, ``tools``, ``nastech_cli``) from a checkout: set
+``NASTECH_AGENT_REPO`` to your nastech-agent clone (default ``~/.nastech/nastech-agent``), or
+``pip install -e`` it. This repo is loaded as the package ``nastech_plugin_holographic`` — the same tree
+``nastech plugins install`` copies to ``$NASTECH_HOME/plugins/holographic/``.
 """
 import importlib.util
 import os
@@ -12,12 +12,12 @@ from pathlib import Path
 
 import pytest
 
-HERMES_AGENT_REPO = Path(os.environ.get("HERMES_AGENT_REPO") or Path.home() / ".hermes" / "hermes-agent").expanduser()
+NASTECH_AGENT_REPO = Path(os.environ.get("NASTECH_AGENT_REPO") or Path.home() / ".nastech" / "nastech-agent").expanduser()
 REPO_ROOT = Path(__file__).resolve().parent.parent
-if str(HERMES_AGENT_REPO) not in sys.path:
-    sys.path.insert(0, str(HERMES_AGENT_REPO))
+if str(NASTECH_AGENT_REPO) not in sys.path:
+    sys.path.insert(0, str(NASTECH_AGENT_REPO))
 
-PACKAGE = "hermes_plugin_holographic"
+PACKAGE = "nastech_plugin_holographic"
 if PACKAGE not in sys.modules:
     _spec = importlib.util.spec_from_file_location(
         PACKAGE, REPO_ROOT / "__init__.py", submodule_search_locations=[str(REPO_ROOT)]
@@ -28,11 +28,11 @@ if PACKAGE not in sys.modules:
 
 
 @pytest.fixture(autouse=True)
-def _isolated_hermes_home(tmp_path, monkeypatch):
-    """Every test gets its own HERMES_HOME; nothing touches the real ~/.hermes."""
-    home = tmp_path / "hermes_test"
+def _isolated_nastech_home(tmp_path, monkeypatch):
+    """Every test gets its own NASTECH_HOME; nothing touches the real ~/.nastech."""
+    home = tmp_path / "nastech_test"
     home.mkdir()
-    monkeypatch.setenv("HERMES_HOME", str(home))
+    monkeypatch.setenv("NASTECH_HOME", str(home))
     return home
 
 

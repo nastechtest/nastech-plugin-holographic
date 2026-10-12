@@ -10,9 +10,9 @@ import pytest
 
 pytest.importorskip("numpy")
 
-from hermes_plugin_holographic import HolographicMemoryProvider
-from hermes_plugin_holographic.retrieval import FactRetriever
-from hermes_plugin_holographic.store import MemoryStore, _capitalized_phrases
+from nastech_plugin_holographic import HolographicMemoryProvider
+from nastech_plugin_holographic.retrieval import FactRetriever
+from nastech_plugin_holographic.store import MemoryStore, _capitalized_phrases
 
 DIM = 1024
 

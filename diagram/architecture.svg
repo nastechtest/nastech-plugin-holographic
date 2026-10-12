@@ -33,18 +33,18 @@
   <rect width="100%" height="100%" fill="url(#grid)"/>
 
   <!-- 8. title (top-left, outside content) -->
-  <text x="30" y="38" class="title">holographic: how it fits into Hermes Agent</text>
+  <text x="30" y="38" class="title">holographic: how it fits into Nastech Agent</text>
   <text x="30" y="56" class="subtitle">One SQLite file per profile (or per user). No network, no API key, no model calls.</text>
 
   <!-- 2. column regions -->
   <rect x="30" y="103" width="230" height="2" rx="1" fill="#fbbf24" opacity="0.7"/>
-  <text x="42" y="96" class="region" fill="#fbbf24">Hermes Agent core</text>
+  <text x="42" y="96" class="region" fill="#fbbf24">Nastech Agent core</text>
   <rect x="290" y="103" width="230" height="2" rx="1" fill="#34d399" opacity="0.7"/>
   <text x="302" y="96" class="region" fill="#34d399">provider · __init__.py</text>
   <rect x="550" y="103" width="250" height="2" rx="1" fill="#22d3ee" opacity="0.7"/>
   <text x="562" y="96" class="region" fill="#22d3ee">retrieval.py · text.py · store.py</text>
   <rect x="830" y="103" width="220" height="2" rx="1" fill="#a78bfa" opacity="0.7"/>
-  <text x="842" y="96" class="region" fill="#a78bfa">$HERMES_HOME/memory_store.db</text>
+  <text x="842" y="96" class="region" fill="#a78bfa">$NASTECH_HOME/memory_store.db</text>
 
   <!-- 3. arrows -->
   <!-- lane 1: message in, facts out -->

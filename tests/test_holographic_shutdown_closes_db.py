@@ -16,7 +16,7 @@ import sqlite3
 
 import pytest
 
-from hermes_plugin_holographic import HolographicMemoryProvider
+from nastech_plugin_holographic import HolographicMemoryProvider
 
 
 def _make_provider(tmp_path):
@@ -54,7 +54,7 @@ def test_release_all_under_closes_connections_inside_directory_only(tmp_path):
     fail with WinError 32. ``release_all_under`` force-closes exactly the shared
     connections under the doomed directory and leaves everything else alone.
     """
-    from hermes_plugin_holographic.store import MemoryStore
+    from nastech_plugin_holographic.store import MemoryStore
 
     profile_dir = tmp_path / "profiles" / "default-2"
     profile_dir.mkdir(parents=True)
@@ -103,7 +103,7 @@ def test_stale_holder_close_does_not_evict_fresh_registry_entry(tmp_path):
     would let a third store open a SECOND connection to the same database and
     silently reintroduce the multi-writer contention the registry prevents.
     """
-    from hermes_plugin_holographic.store import MemoryStore
+    from nastech_plugin_holographic.store import MemoryStore
 
     profile_dir = tmp_path / "profiles" / "default-2"
     profile_dir.mkdir(parents=True)

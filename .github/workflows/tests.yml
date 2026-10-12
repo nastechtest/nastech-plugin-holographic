@@ -17,35 +17,35 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Allow long paths (hermes-agent's docs tree exceeds MAX_PATH)
+      - name: Allow long paths (nastech-agent's docs tree exceeds MAX_PATH)
         if: runner.os == 'Windows'
         run: git config --system core.longpaths true
       - uses: actions/checkout@v4
         with:
           path: plugin
           fetch-depth: 0  # tags: tests/test_holographic_compat.py runs v0.1.1 from its tag
-      # The plugin imports Hermes core (agent, tools, hermes_cli) from a checkout, the way an installed plugin does.
+      # The plugin imports Nastech core (agent, tools, nastech_cli) from a checkout, the way an installed plugin does.
       - uses: actions/checkout@v4
         with:
-          repository: NousResearch/hermes-agent
-          path: hermes-agent
-      # Hermes core gates every runtime dependency on python_version >= '3.14'; older Pythons install none of them.
+          repository: NastechResearch/nastech-agent
+          path: nastech-agent
+      # Nastech core gates every runtime dependency on python_version >= '3.14'; older Pythons install none of them.
       - uses: actions/setup-python@v5
         with:
           python-version: "3.14"
-      - name: Install hermes-agent and this plugin's declared dependencies
+      - name: Install nastech-agent and this plugin's declared dependencies
         shell: bash
         run: |
-          python -m pip install -e ./hermes-agent "pytest==9.1.1"
+          python -m pip install -e ./nastech-agent "pytest==9.1.1"
           python -c "import tomllib; print('\n'.join(tomllib.load(open('plugin/pyproject.toml', 'rb'))['project']['dependencies']))" > plugin-deps.txt
           python -m pip install -r plugin-deps.txt
       - name: Run the plugin suite
         working-directory: plugin
         env:
-          HERMES_AGENT_REPO: ${{ github.workspace }}/hermes-agent
+          NASTECH_AGENT_REPO: ${{ github.workspace }}/nastech-agent
         run: python -m pytest -q
 
-  # The same check the Hermes plugin catalog runs on an entry at its pinned commit.
+  # The same check the Nastech plugin catalog runs on an entry at its pinned commit.
   validate:
     runs-on: ubuntu-latest
     steps:
@@ -54,14 +54,14 @@ jobs:
           path: plugin
       - uses: actions/checkout@v4
         with:
-          repository: NousResearch/hermes-agent
-          path: hermes-agent
+          repository: NastechResearch/nastech-agent
+          path: nastech-agent
       - uses: actions/setup-python@v5
         with:
           python-version: "3.14"
-      - name: Install hermes-agent
-        run: python -m pip install -e ./hermes-agent
-      - name: hermes plugins validate
+      - name: Install nastech-agent
+        run: python -m pip install -e ./nastech-agent
+      - name: nastech plugins validate
         env:
-          HERMES_HOME: ${{ runner.temp }}/hermes-home
-        run: hermes plugins validate --install-deps "$GITHUB_WORKSPACE/plugin" </dev/null
+          NASTECH_HOME: ${{ runner.temp }}/nastech-home
+        run: nastech plugins validate --install-deps "$GITHUB_WORKSPACE/plugin" </dev/null

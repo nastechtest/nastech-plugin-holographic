@@ -11,10 +11,10 @@ import pytest
 pytest.importorskip("numpy")
 pytest.importorskip("snowballstemmer")
 
-from hermes_plugin_holographic import HolographicMemoryProvider
-from hermes_plugin_holographic.retrieval import FactRetriever
-from hermes_plugin_holographic.store import MemoryStore
-from hermes_plugin_holographic.text import analyze, fold, is_greeting, is_identifier, query_terms, words
+from nastech_plugin_holographic import HolographicMemoryProvider
+from nastech_plugin_holographic.retrieval import FactRetriever
+from nastech_plugin_holographic.store import MemoryStore
+from nastech_plugin_holographic.text import analyze, fold, is_greeting, is_identifier, query_terms, words
 
 DIM = 512
 
@@ -145,7 +145,7 @@ def test_bengali_case_endings_and_digits(store):
 
 
 def test_indonesian_prefixes(store):
-    store.add_fact("Skrip yang tidak terkait Hermes dijalankan dengan Python 3.12")
+    store.add_fact("Skrip yang tidak terkait Nastech dijalankan dengan Python 3.12")
     store.add_fact("Kucing keluarga bernama Mia")
     assert _found(store, "bisa jalankan skrip apa?")[0].startswith("Skrip")
     assert _found(store, "kucingnya siapa namanya?")[0].startswith("Kucing")

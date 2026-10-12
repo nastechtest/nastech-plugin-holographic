@@ -11,8 +11,8 @@ import pytest
 
 pytest.importorskip("numpy")  # retrieval module imports numpy indirectly
 
-from hermes_plugin_holographic.retrieval import FactRetriever
-from hermes_plugin_holographic.store import MemoryStore
+from nastech_plugin_holographic.retrieval import FactRetriever
+from nastech_plugin_holographic.store import MemoryStore
 
 # ---------------------------------------------------------------------------
 # _sanitize_fts_query — unit tests (no DB required)
@@ -101,7 +101,7 @@ def test_prefetch_recovers_prose_query(retriever_with_facts):
 # hoisted vectors are bit-identical to the per-iteration values they replace.
 # ---------------------------------------------------------------------------
 
-from hermes_plugin_holographic import holographic as hrr
+from nastech_plugin_holographic import holographic as hrr
 
 def test_encode_functions_are_deterministic():
     """Soundness premise of the hoists: same input -> identical vector."""

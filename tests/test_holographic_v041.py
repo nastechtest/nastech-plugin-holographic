@@ -12,9 +12,9 @@ import pytest
 
 pytest.importorskip("numpy")
 
-from hermes_plugin_holographic import HolographicMemoryProvider
-from hermes_plugin_holographic.retrieval import FactRetriever
-from hermes_plugin_holographic.store import MemoryStore
+from nastech_plugin_holographic import HolographicMemoryProvider
+from nastech_plugin_holographic.retrieval import FactRetriever
+from nastech_plugin_holographic.store import MemoryStore
 
 DIM = 512
 
@@ -41,7 +41,7 @@ def _provider(tmp_path, **config):
 
 def _user(tmp_path, user_id="111", **config):
     provider = _provider(tmp_path, scope="user", **config)
-    provider.initialize(session_id="s", hermes_home=str(tmp_path), platform="telegram", user_id=user_id)
+    provider.initialize(session_id="s", nastech_home=str(tmp_path), platform="telegram", user_id=user_id)
     return provider
 
 
@@ -156,11 +156,11 @@ def test_legacy_aliases_survive_a_key_merge(tmp_path):
     s.close()
     raw = sqlite3.connect(str(db))
     raw.execute("DELETE FROM meta")  # look like a store an older version wrote
-    raw.execute("INSERT INTO entities (name, aliases) VALUES ('Hermes Agent', 'Old Name'), ('hermes-agent', 'Lost Name')")
+    raw.execute("INSERT INTO entities (name, aliases) VALUES ('Nastech Agent', 'Old Name'), ('nastech-agent', 'Lost Name')")
     raw.commit()
     raw.close()
     s = MemoryStore(str(db), hrr_dim=DIM)
-    ids = {name: s.entity_ids(name) for name in ("Hermes Agent", "Old Name", "Lost Name")}
+    ids = {name: s.entity_ids(name) for name in ("Nastech Agent", "Old Name", "Lost Name")}
     assert len({tuple(v) for v in ids.values()}) == 1 and all(ids.values())
     s.close()
 
@@ -251,7 +251,7 @@ def test_user_queries_never_produce_invalid_fts(store, caplog, query):
 
 @pytest.mark.parametrize("query", ['foo"bar walk', 'he said "hi'])
 def test_queries_are_safe_without_the_stemmer(store, caplog, monkeypatch, query):
-    from hermes_plugin_holographic import text
+    from nastech_plugin_holographic import text
     monkeypatch.setattr(text, "_STEMMERS", {})
     text.stem.cache_clear()
     store.add_fact("Alice Smith lives in Paris")
@@ -329,7 +329,7 @@ def test_validator_catches_exfiltration_and_allows_quoted_reports(tmp_path):
 def test_backup_paths_include_external_user_stores(tmp_path):
     external = tmp_path / "external"
     provider = HolographicMemoryProvider(config={"db_path": str(external / "facts.db"), "hrr_dim": DIM, "scope": "user"})
-    provider.initialize(session_id="s", hermes_home=str(tmp_path / "home"), platform="telegram", user_id="111")
+    provider.initialize(session_id="s", nastech_home=str(tmp_path / "home"), platform="telegram", user_id="111")
     _call(provider, action="add", content="Alice Smith lives in Paris")
     provider.shutdown()
     paths = provider.backup_paths()

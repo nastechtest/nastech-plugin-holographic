@@ -12,9 +12,9 @@ import pytest
 pytest.importorskip("numpy")
 pytest.importorskip("snowballstemmer")
 
-from hermes_plugin_holographic import HolographicMemoryProvider
-from hermes_plugin_holographic.retrieval import FactRetriever
-from hermes_plugin_holographic.store import MemoryStore
+from nastech_plugin_holographic import HolographicMemoryProvider
+from nastech_plugin_holographic.retrieval import FactRetriever
+from nastech_plugin_holographic.store import MemoryStore
 
 DIM = 1024
 
@@ -114,9 +114,9 @@ def test_undeclared_one_word_entities_do_not_attach_to_every_fact(store):
 
 
 def test_recall_status_reports_the_last_prefetch(tmp_path):
-    from hermes_plugin_holographic import RecallStatus
+    from nastech_plugin_holographic import RecallStatus
     if RecallStatus is None:
-        pytest.skip("this Hermes core has no recall indicator")
+        pytest.skip("this Nastech core has no recall indicator")
     provider = _provider(tmp_path)
     _seed(provider)
     provider.prefetch("напомни про встречу в пятницу")

@@ -9,10 +9,10 @@ import pytest
 pytest.importorskip("numpy")
 pytest.importorskip("snowballstemmer")
 
-from hermes_plugin_holographic import HolographicMemoryProvider
-from hermes_plugin_holographic.retrieval import FactRetriever
-from hermes_plugin_holographic.store import MemoryStore
-from hermes_plugin_holographic.text import analyze, query_terms, run_grams
+from nastech_plugin_holographic import HolographicMemoryProvider
+from nastech_plugin_holographic.retrieval import FactRetriever
+from nastech_plugin_holographic.store import MemoryStore
+from nastech_plugin_holographic.text import analyze, query_terms, run_grams
 
 DIM = 512
 
@@ -103,7 +103,7 @@ def test_enrich_lists_facts_without_keywords(provider):
 @pytest.mark.parametrize("setting,shown", [(None, True), (False, False), ("false", False), ("true", True)])
 def test_recall_indicator_can_be_switched_off(tmp_path, monkeypatch, setting, shown):
     """On a messaging platform the core sends the indicator as its own message; recall itself stays on."""
-    import hermes_plugin_holographic as plugin
+    import nastech_plugin_holographic as plugin
     if plugin.RecallStatus is None:  # an older core: stand in for its dataclass
         monkeypatch.setattr(plugin, "RecallStatus", lambda provider_label, count: (provider_label, count))
     config = {"db_path": str(tmp_path / "memory_store.db"), "hrr_dim": DIM}

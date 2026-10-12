@@ -11,9 +11,9 @@ import pytest
 
 pytest.importorskip("numpy")
 
-from hermes_plugin_holographic import HolographicMemoryProvider
-from hermes_plugin_holographic.retrieval import FactRetriever
-from hermes_plugin_holographic.store import DuplicateContentError, MemoryStore
+from nastech_plugin_holographic import HolographicMemoryProvider
+from nastech_plugin_holographic.retrieval import FactRetriever
+from nastech_plugin_holographic.store import DuplicateContentError, MemoryStore
 
 DIM = 1024
 
@@ -229,10 +229,10 @@ def test_initialize_uses_the_given_profile_home(tmp_path):
     home = tmp_path / "profile-b"
     home.mkdir()
     provider = HolographicMemoryProvider(config={"hrr_dim": DIM})
-    provider.initialize(session_id="s", hermes_home=str(home))
+    provider.initialize(session_id="s", nastech_home=str(home))
     assert Path(provider._store.db_path) == home / "memory_store.db"
     first = provider._store
-    provider.initialize(session_id="s2", hermes_home=str(home))  # re-init releases the previous handle
+    provider.initialize(session_id="s2", nastech_home=str(home))  # re-init releases the previous handle
     assert first._entry is None
     provider.shutdown()
 

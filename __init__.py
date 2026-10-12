@@ -1,6 +1,6 @@
-"""hermes-memory-store — holographic memory plugin (MemoryProvider): structured fact storage with entity
+"""nastech-memory-store — holographic memory plugin (MemoryProvider): structured fact storage with entity
 resolution, trust scoring, and HRR-based compositional retrieval. Original plugin by dusterbloom (PR #2351).
-Config in $HERMES_HOME/config.yaml under plugins.hermes-memory-store: db_path ($HERMES_HOME/memory_store.db),
+Config in $NASTECH_HOME/config.yaml under plugins.nastech-memory-store: db_path ($NASTECH_HOME/memory_store.db),
 auto_extract (false), default_trust (0.5), min_trust_threshold (0.3), temporal_decay_half_life (0),
 hrr_dim (1024), hrr_weight (0.3), mirror_memory_writes (false), prefetch_min_coverage (0.3),
 prefetch_repeat_turns (6), recall_indicator (true), scope (profile | user | chat | thread)."""
@@ -23,7 +23,7 @@ from utils import is_truthy_value
 from . import holographic as hrr
 from .store import DuplicateContentError, MemoryStore
 from .retrieval import FactRetriever
-from hermes_cli.config import cfg_get
+from nastech_cli.config import cfg_get
 
 try:  # core >= the recall indicator; older cores simply show none
     from agent.memory_provider import RecallStatus
@@ -34,7 +34,7 @@ logger = logging.getLogger(__name__)
 
 # Expanded by initialize() against the profile that opens it. A concrete path is copied by a profile clone
 # and outlives a rename, so it keeps naming the old profile's DB.
-_DEFAULT_DB_PATH = "$HERMES_HOME/memory_store.db"
+_DEFAULT_DB_PATH = "$NASTECH_HOME/memory_store.db"
 
 
 FACT_STORE_SCHEMA = {
@@ -164,8 +164,8 @@ def _fact_problem(content: str) -> str | None:
 
 def _load_plugin_config() -> dict:
     try:
-        from hermes_cli.config import load_config_readonly  # canonical: managed-scope overlay + ${VAR} expansion
-        return cfg_get(load_config_readonly(), "plugins", "hermes-memory-store", default={}) or {}
+        from nastech_cli.config import load_config_readonly  # canonical: managed-scope overlay + ${VAR} expansion
+        return cfg_get(load_config_readonly(), "plugins", "nastech-memory-store", default={}) or {}
     except Exception:
         return {}
 
@@ -279,7 +279,7 @@ class HolographicMemoryProvider(MemoryProvider):
         self._scope_key = ""  # "" = the profile store; otherwise the user / chat whose store is active
         self._stores: OrderedDict[str, tuple] = OrderedDict()  # scope key -> (MemoryStore, FactRetriever), LRU
         self._home, self._platform = "", ""
-        self._init_key: str | None = None  # the user Hermes named at start (user scope)
+        self._init_key: str | None = None  # the user Nastech named at start (user scope)
         self._authors_seen = False  # a turn carried an author: a shared conversation, so an anonymous turn is nobody
 
     @property
@@ -289,28 +289,28 @@ class HolographicMemoryProvider(MemoryProvider):
     def is_available(self) -> bool:
         return True  # SQLite is always available, numpy is optional
 
-    def save_config(self, values, hermes_home):
-        """Write config to *hermes_home*'s config.yaml under plugins.hermes-memory-store."""
+    def save_config(self, values, nastech_home):
+        """Write config to *nastech_home*'s config.yaml under plugins.nastech-memory-store."""
         # The canonical writer: config lock, managed-mode refusal, default stripping, atomic replace.
         # ``merge_existing`` keeps every other section. The home override makes it write the profile being
         # configured, not whichever profile is active in this process.
-        from hermes_cli.config import save_config
-        from hermes_constants import reset_hermes_home_override, set_hermes_home_override
+        from nastech_cli.config import save_config
+        from nastech_constants import reset_nastech_home_override, set_nastech_home_override
         values = dict(values)
         # This profile's own DB spelled out (older setups wrote it; the dashboard form re-submits what it
         # read) pins every clone and rename of the profile to this file, so it is stored as the placeholder.
         db_path = values.get("db_path")
-        if isinstance(db_path, str) and Path(db_path).expanduser() == Path(hermes_home) / "memory_store.db":
+        if isinstance(db_path, str) and Path(db_path).expanduser() == Path(nastech_home) / "memory_store.db":
             values["db_path"] = _DEFAULT_DB_PATH
-        token = set_hermes_home_override(hermes_home)
+        token = set_nastech_home_override(nastech_home)
         try:
-            save_config({"plugins": {"hermes-memory-store": values}}, merge_existing=True)
+            save_config({"plugins": {"nastech-memory-store": values}}, merge_existing=True)
         finally:
-            reset_hermes_home_override(token)
+            reset_nastech_home_override(token)
 
     def get_config_schema(self):
         """Setup fields. ``default`` is the value saved now (falling back to the factory default), so re-running
-        ``hermes memory setup`` keeps the current database and switches instead of resetting them."""
+        ``nastech memory setup`` keeps the current database and switches instead of resetting them."""
         def current(key: str, factory: str) -> str:
             value = self._config.get(key, factory)
             return ("true" if value else "false") if isinstance(value, bool) else str(value)
@@ -332,16 +332,16 @@ class HolographicMemoryProvider(MemoryProvider):
              "default": current("recall_indicator", "true"), "choices": ["true", "false"]},
         ]
 
-    def _db_path(self, hermes_home: str) -> str:
+    def _db_path(self, nastech_home: str) -> str:
         db_path = self._config.get("db_path", _DEFAULT_DB_PATH)
-        if isinstance(db_path, str):  # expand $HERMES_HOME so paths resolve to the profile that opens it
-            db_path = db_path.replace("$HERMES_HOME", hermes_home).replace("${HERMES_HOME}", hermes_home)
+        if isinstance(db_path, str):  # expand $NASTECH_HOME so paths resolve to the profile that opens it
+            db_path = db_path.replace("$NASTECH_HOME", nastech_home).replace("${NASTECH_HOME}", nastech_home)
         return db_path
 
     def backup_paths(self) -> list[str]:
-        """The database when it lives outside HERMES_HOME (``hermes backup`` already covers the home)."""
-        from hermes_constants import get_hermes_home
-        home = get_hermes_home()
+        """The database when it lives outside NASTECH_HOME (``nastech backup`` already covers the home)."""
+        from nastech_constants import get_nastech_home
+        home = get_nastech_home()
         db_path = self._db_path(str(home))
         if not isinstance(db_path, str) or db_path == ":memory:":
             return []
@@ -359,14 +359,14 @@ class HolographicMemoryProvider(MemoryProvider):
 
     @_serialized
     def initialize(self, session_id: str, **kwargs) -> None:
-        from hermes_constants import get_hermes_home
-        _hermes_home = str(kwargs.get("hermes_home") or get_hermes_home())
+        from nastech_constants import get_nastech_home
+        _nastech_home = str(kwargs.get("nastech_home") or get_nastech_home())
         if self._stores:  # re-initialised: release the previous handles first
             self.shutdown()
         # Contract: subagent / cron / flush contexts read but never write (facts, feedback, counters, extraction).
         self._writable = str(kwargs.get("agent_context") or "primary") in _WRITER_CONTEXTS
         self._session_id, self._init_error = session_id, ""
-        self._home, self._platform = _hermes_home, str(kwargs.get("platform") or "")
+        self._home, self._platform = _nastech_home, str(kwargs.get("platform") or "")
         self._authors_seen = False
         if self._scope == "user":
             self._init_key = self._user_key(kwargs.get("user_id"))
@@ -441,7 +441,7 @@ class HolographicMemoryProvider(MemoryProvider):
     def on_turn_start(self, turn_number: int, message: str, **kwargs) -> None:
         """User scope follows the author of each turn. A bot author, or an anonymous turn in a conversation that has
         had authors (a shared chat), is nobody: recall and writes are off for that turn (fail closed). A conversation
-        without any author is the user Hermes named at start."""
+        without any author is the user Nastech named at start."""
         if self._scope != "user" or not self._home:
             return
         if kwargs.get("author_is_bot"):

@@ -125,7 +125,7 @@ STOP = {
 "fr": _folded("""
     à a ai as au aux avec avez avoir avons c ça ce ceci cela celle celles celui ces cet cette chez comme comment d dans
     de des donc dont du elle elles en encore est et étaient était été être eu eux fait faire fais font il ils j je l la
-    le les leur leurs lui m ma mais me même mes moi mon n ne ni nos notre nous on ont ou où par pas peu peut peux
+    le les leur leurs lui m ma mais me même mes moi mon n ne ni nos notre nastech on ont ou où par pas peu peut peux
     pouvez pour pourquoi qu quand que quel quelle quelles quels qui quoi s sa sans se ses si son sont sous suis sur t
     ta te tes toi ton tous tout toute toutes très tu un une vers vos votre vous y combien quelque lequel laquelle oui
     non merci salut bonjour accord ok va vais vas allons allez vont aller faut"""),
@@ -308,7 +308,7 @@ def _keys(word: str, langs: tuple[str, ...]) -> frozenset:
 _ELISION = re.compile(r"^(?:l|d|j|m|n|s|t|c|qu|jusqu|lorsqu|puisqu|quoiqu|dell|all|nell|sull|dall|un)'(?=[^\W\d_])")
 # Pronouns after the verb, taken off only in text of that language: French inversion ("prend-il", "a-t-elle",
 # "est-ce", "vas-y"; not the noun "rendez-vous") and Portuguese enclisis ("chama-se", "lembra-me").
-_FR_CLITICS = frozenset("je tu il elle on nous vous ils elles ce moi toi lui leur le la les y en".split())
+_FR_CLITICS = frozenset("je tu il elle on nastech vous ils elles ce moi toi lui leur le la les y en".split())
 _FR_COMPOUNDS = frozenset({"rendez-vous"})
 _PT_CLITICS = frozenset("se me te lhe lhes nos vos o a os as lo la los las no na nas".split())
 _CONTROL = re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f-\x9f]")

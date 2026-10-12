@@ -8,9 +8,9 @@ import pytest
 
 pytest.importorskip("numpy")
 
-from hermes_plugin_holographic import HolographicMemoryProvider
-from hermes_plugin_holographic.retrieval import FactRetriever
-from hermes_plugin_holographic.store import MemoryStore, entity_key
+from nastech_plugin_holographic import HolographicMemoryProvider
+from nastech_plugin_holographic.retrieval import FactRetriever
+from nastech_plugin_holographic.store import MemoryStore, entity_key
 
 DIM = 512
 
@@ -34,16 +34,16 @@ def _call(provider, **args):
 
 
 def test_entity_key_unifies_spelling_not_meaning():
-    assert entity_key("Hermes Agent") == entity_key("hermes-agent") == entity_key("HERMES  AGENT") == entity_key("Hermes_Agent")
+    assert entity_key("Nastech Agent") == entity_key("nastech-agent") == entity_key("NASTECH  AGENT") == entity_key("Nastech_Agent")
     assert entity_key("co-op") != entity_key("coop")
     assert entity_key("Мария Иванова") == entity_key("МАРИЯ ИВАНОВА")
 
 
 def test_spelling_variants_are_one_entity(store):
-    a = store.add_fact("Hermes Agent runs on the server")
-    b = store.add_fact('The repo "hermes-agent" moved to a new org')
+    a = store.add_fact("Nastech Agent runs on the server")
+    b = store.add_fact('The repo "nastech-agent" moved to a new org')
     assert store.read("SELECT COUNT(*) FROM entities")[0][0] == 1
-    assert {f["fact_id"] for f in _r(store).probe("HERMES-AGENT")} == {a, b}
+    assert {f["fact_id"] for f in _r(store).probe("NASTECH-AGENT")} == {a, b}
 
 
 def test_aka_makes_an_alias_not_a_second_entity(store):
@@ -70,15 +70,15 @@ def test_alias_action_merges_two_entities(tmp_path):
 def test_entities_written_by_an_older_version_are_reconciled_on_open(tmp_path):
     db = tmp_path / "facts.db"
     s = MemoryStore(str(db), hrr_dim=DIM)
-    first = s.add_fact("Hermes Agent runs on the server")
+    first = s.add_fact("Nastech Agent runs on the server")
     # what an older version leaves behind: a second entity of the same name, no key, linked to its own fact
     second = s.add_fact("deploys are weekly")
-    s._write("INSERT INTO entities (name) VALUES ('hermes-agent')")
+    s._write("INSERT INTO entities (name) VALUES ('nastech-agent')")
     s._write("INSERT INTO fact_entities (fact_id, entity_id) VALUES (?, last_insert_rowid())", (second,))
     s.close()
     s = MemoryStore(str(db), hrr_dim=DIM)
     assert s.read("SELECT COUNT(*) FROM entities")[0][0] == 1
-    assert {f["fact_id"] for f in _r(s).probe("Hermes Agent")} == {first, second}
+    assert {f["fact_id"] for f in _r(s).probe("Nastech Agent")} == {first, second}
     s.close()
 
 
@@ -125,7 +125,7 @@ def test_prefetch_recalls_thai(tmp_path):
 
 def _user_provider(tmp_path, **kwargs):
     provider = HolographicMemoryProvider(config={"db_path": str(tmp_path / "memory_store.db"), "hrr_dim": DIM, "scope": "user"})
-    provider.initialize(session_id="s", hermes_home=str(tmp_path), platform="telegram", **kwargs)
+    provider.initialize(session_id="s", nastech_home=str(tmp_path), platform="telegram", **kwargs)
     return provider
 
 

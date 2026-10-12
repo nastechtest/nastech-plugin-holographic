@@ -8,7 +8,7 @@ import pytest
 
 pytest.importorskip("numpy")
 
-from hermes_plugin_holographic import HolographicMemoryProvider
+from nastech_plugin_holographic import HolographicMemoryProvider
 
 DIM = 512
 
@@ -21,7 +21,7 @@ def _chat(tmp_path, scope="chat", **kwargs):
     config = {"db_path": str(tmp_path / "memory_store.db"), "hrr_dim": DIM, "scope": scope}
     config.update(kwargs.pop("config", {}))
     provider = HolographicMemoryProvider(config=config)
-    provider.initialize(session_id="s", hermes_home=str(tmp_path), platform="telegram", **kwargs)
+    provider.initialize(session_id="s", nastech_home=str(tmp_path), platform="telegram", **kwargs)
     return provider
 
 

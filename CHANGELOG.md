@@ -11,9 +11,9 @@
   in the FTS index, the n-gram scan, entities, HRR banks and the write checks, and one missed filter would leak between
   chats. The core already passes `chat_id` / `thread_id` to memory providers; no core change. Without a chat (CLI,
   cron, subagents) nothing is recalled or written, as in `scope: user`. Existing facts stay in the profile database;
-  tools that read `memory_store.db` directly (e.g. hermes-dreaming) do not see per-chat databases. Per-turn
+  tools that read `memory_store.db` directly (e.g. nastech-dreaming) do not see per-chat databases. Per-turn
   auto-extraction (`auto_extract`) files facts into the active store — the chat's, never the profile one.
-  ([#1](https://github.com/itpartypattaya/hermes-plugin-holographic/issues/1))
+  ([#1](https://github.com/nastechtest/nastech-plugin-holographic/issues/1))
 
 ## 0.6.2 — 2026-10-12
 
@@ -23,7 +23,7 @@
   ("🧠 Holographic — recalled 1 memory"); on Telegram and other messaging platforms it arrives as a separate message
   before every reply that used memory, in English, in family and group chats alike — the bundled v0.1.1 never reported
   it, so installs moving to this plugin see it for the first time. `recall_indicator: false` under
-  `plugins.hermes-memory-store` turns the line off; what is recalled does not change.
+  `plugins.nastech-memory-store` turns the line off; what is recalled does not change.
 
 ## 0.6.1 — 2026-10-11
 
@@ -31,7 +31,7 @@
 
 - **Keywords no longer make a fact look recently changed.** `update` with keywords alone stamped `updated_at` like
   any edit, so every fact given keywords afterwards (by `enrich`, by hand or by a nightly job) looked fresh: temporal
-  decay favoured it, and a job that reviews recent facts (hermes-dreaming) would have taken a backlog of old facts
+  decay favoured it, and a job that reviews recent facts (nastech-dreaming) would have taken a backlog of old facts
   for new ones. Keywords are a search aid, not a change of the fact: an `update` that carries only `keywords` keeps
   `updated_at`; one that also changes content, tags, category, trust or entities stamps it as before.
 
@@ -141,7 +141,7 @@ Fixes from a second independent review (Codex CLI, whole branch 0.1.1..0.4.0), e
 
 - **User scope failed open**: an anonymous turn in a shared chat kept the previous person's store active, and a bot
   without an id passed the bot check. Now a bot, or an anonymous turn once the conversation has had authors, is
-  nobody (no recall, no writes); a conversation that never had authors is the user Hermes named at start.
+  nobody (no recall, no writes); a conversation that never had authors is the user Nastech named at start.
 - **Extraction mixed people**: in user scope, session-end and pre-compression extraction stored every participant's
   sentences in the active person's store. Extraction now runs per turn in `sync_turn`, filed under `turn_author`;
   unattributable turns and whole transcripts are skipped.
@@ -192,7 +192,7 @@ they write is reconciled on the next open. CI: 0.4.0 → 0.1.1 → 0.4.0 on one 
 ### Added
 
 - **Entity identity**: `entities.name_key` (NFKC, casefold, hyphen/underscore as space) with a unique index, so
-  `Hermes Agent`, `hermes-agent` and `HERMES AGENT` are one entity. Entities an older version created without a key
+  `Nastech Agent`, `nastech-agent` and `NASTECH AGENT` are one entity. Entities an older version created without a key
   are keyed on open and merged into an existing one with the same key.
 - **Aliases**: `entity_aliases` table; `X aka Y` makes `Y` an alias of `X` (it used to create two unrelated
   entities); actions `entities` (names, aliases, fact counts) and `alias` (second name, or merge two entities).
@@ -202,7 +202,7 @@ they write is reconciled on the next open. CI: 0.4.0 → 0.1.1 → 0.4.0 on one 
 - **Thai, Chinese, Japanese, Korean**: matched by character n-grams (trigrams for Thai/Lao/Khmer/Myanmar, bigrams for
   CJK and Hangul) in search and in the recall gate. A substring scan, no extra index or migration.
 - **Per-user stores** (`scope: user`): one database per `<platform>-<user id>` under `holographic-users/`, chosen by
-  the user Hermes passes at start and switched to the author of each turn in shared chats (`on_turn_start`). No
+  the user Nastech passes at start and switched to the author of each turn in shared chats (`on_turn_start`). No
   identity, or a bot author: fails closed (no recall, no writes). Separate files instead of a scope column: the
   global `UNIQUE(content)` keeps working per user, and an older version cannot expose one user's facts to another
   because it never opens those files.
@@ -213,7 +213,7 @@ they write is reconciled on the next open. CI: 0.4.0 → 0.1.1 → 0.4.0 on one 
 
 ## 0.3.0 — 2026-10-11
 
-Recall and writing quality, from user reports (r/hermesagent: "can't tell if it works", "the agent never stores
+Recall and writing quality, from user reports (r/nastechagent: "can't tell if it works", "the agent never stores
 anything", "fills up with junk", "an old IP stayed next to the new one") and the audit. No schema change: one more
 use of the existing `entities.entity_type` column, and 0.3.0 → 0.1.1 → 0.3.0 still passes on one database.
 
@@ -292,18 +292,18 @@ written by 0.2.1 still works with 0.1.1 and the bundled core copy (tested: 0.2.1
 
 - Subagent, cron and flush contexts (`agent_context`) read but never write: no facts, feedback, counters,
   extraction or mirroring.
-- `initialize` opens the database of the `hermes_home` it is given and releases a previous handle when called again;
+- `initialize` opens the database of the `nastech_home` it is given and releases a previous handle when called again;
   `save_config` writes the profile it is given.
 - `on_memory_write` takes the `metadata` argument; with `mirror_memory_writes` on, `replace` and `remove` follow the
   entry by `metadata["previous_content"]`.
-- Re-running `hermes memory setup` offers the saved values as defaults instead of the factory ones (it used to switch
+- Re-running `nastech memory setup` offers the saved values as defaults instead of the factory ones (it used to switch
   `db_path` to a fresh file and turn `auto_extract` off).
-- `backup_paths()` lists a database outside the Hermes home; the database and its WAL files are owner-only on POSIX.
+- `backup_paths()` lists a database outside the Nastech home; the database and its WAL files are owner-only on POSIX.
 - `limit` is clamped to 1–100; `fact_feedback` refuses actions other than helpful / unhelpful.
 
 ## 0.2.0 — 2026-10-10
 
-First release under new maintenance (itpartypattaya). Measured on a synthetic store of 200 facts about 20 people
+First release under new maintenance (nastechtest). Measured on a synthetic store of 200 facts about 20 people
 with random trust scores; before → after.
 
 ### Fixed
@@ -323,12 +323,12 @@ with random trust scores; before → after.
   topic vs ~0.51 for others.
 - **`retrieval_count`** was declared and never written. It now counts facts handed to the model: prefetch and the
   search / probe / related / reason actions (not list or contradict). `updated_at` is not touched. Same fix as the
-  unmerged hermes-agent#130930.
+  unmerged nastech-agent#130930.
 - **Entity names** were ASCII-only (`[A-Z][a-z]+`). Capitalized multi-word names in any cased script are linked now
   (`Мария Иванова`, `Jean-Luc Picard`), guillemets and curly quotes count as quotes, and a quoted span of more than
-  three words is treated as a quotation, not a name. Related: unmerged hermes-agent#129521 and #116232.
+  three words is treated as a quotation, not a name. Related: unmerged nastech-agent#129521 and #116232.
 - **FTS5 failures** were swallowed silently (an empty result looked like "no memories"); they are logged as warnings.
-  Related: unmerged hermes-agent#127134.
+  Related: unmerged nastech-agent#127134.
 
 ### Changed
 
@@ -337,10 +337,10 @@ with random trust scores; before → after.
   the copy outlived the entry when it was reworded or removed. Set `mirror_memory_writes: true` for the old behaviour.
   Facts already mirrored stay in the store.
 - Prefetched facts carry their id (`- #12 [0.5] …`) so the model can call `fact_feedback` on them. Related: unmerged
-  hermes-agent#121513.
+  nastech-agent#121513.
 - The `fact_store` description no longer tells the model to "ALWAYS probe or reason first": it says to search first,
   probe a named entity, reason across several.
 
 ## 0.1.1 — 2026-10-02
 
-Nous Research: standalone copy of the provider bundled in hermes-agent, synced with core, tests ported.
+Nastech Research: standalone copy of the provider bundled in nastech-agent, synced with core, tests ported.

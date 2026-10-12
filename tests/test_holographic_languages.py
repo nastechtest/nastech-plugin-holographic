@@ -11,7 +11,7 @@ import pytest
 pytest.importorskip("numpy")
 pytest.importorskip("snowballstemmer")
 
-from hermes_plugin_holographic import HolographicMemoryProvider
+from nastech_plugin_holographic import HolographicMemoryProvider
 
 # key -> (fact text, declared entities)
 CORPUS = {
@@ -34,7 +34,7 @@ CORPUS = {
  "budget": ("The monthly marketing budget is 500 dollars", []),
  "dentist": ("Eva's dentist appointment is on October 20", ["Eva"]),
  "cat": ("The family cat is a British shorthair called Mia", ["Mia"]),
- "python": ("Scripts unrelated to Hermes should run with Python 3.12", []),
+ "python": ("Scripts unrelated to Nastech should run with Python 3.12", []),
  "laptop": ("The work laptop has only 8 GB of memory, so no local LLMs", []),
 },
 "ru": {
@@ -56,7 +56,7 @@ CORPUS = {
  "budget": ("Месячный бюджет на маркетинг составляет 500 долларов", []),
  "dentist": ("Приём у стоматолога для Евы назначен на 20 октября", ["Ева"]),
  "cat": ("Семейная кошка — британская короткошёрстная по имени Мия", ["Мия"]),
- "python": ("Скрипты не для Hermes запускаются на Python 3.12", []),
+ "python": ("Скрипты не для Nastech запускаются на Python 3.12", []),
  "laptop": ("На рабочем ноутбуке всего 8 ГБ памяти, поэтому локальные модели не запускаем", []),
 },
 "zh": {
@@ -78,7 +78,7 @@ CORPUS = {
  "budget": ("每月的市场营销预算是500美元", []),
  "dentist": ("伊娃的牙医预约在10月20日", ["伊娃"]),
  "cat": ("家里的猫是一只英国短毛猫，名叫米娅", ["米娅"]),
- "python": ("与Hermes无关的脚本使用Python 3.12运行", []),
+ "python": ("与Nastech无关的脚本使用Python 3.12运行", []),
  "laptop": ("工作笔记本只有8GB内存，所以不运行本地大模型", []),
 },
 "es": {
@@ -100,7 +100,7 @@ CORPUS = {
  "budget": ("El presupuesto mensual de marketing es de 500 dólares", []),
  "dentist": ("La cita de Eva con el dentista es el 20 de octubre", ["Eva"]),
  "cat": ("La gata de la familia es una british shorthair que se llama Mia", ["Mia"]),
- "python": ("Los scripts que no son de Hermes se ejecutan con Python 3.12", []),
+ "python": ("Los scripts que no son de Nastech se ejecutan con Python 3.12", []),
  "laptop": ("El portátil del trabajo solo tiene 8 GB de memoria, así que nada de LLM locales", []),
 },
 "hi": {
@@ -122,7 +122,7 @@ CORPUS = {
  "budget": ("हर महीने का मार्केटिंग बजट 500 डॉलर है", []),
  "dentist": ("ईवा का डेंटिस्ट अपॉइंटमेंट 20 अक्टूबर को है", ["ईवा"]),
  "cat": ("परिवार की बिल्ली ब्रिटिश शॉर्टहेयर नस्ल की है और उसका नाम मिया है", ["मिया"]),
- "python": ("Hermes से असंबंधित स्क्रिप्ट Python 3.12 पर चलती हैं", []),
+ "python": ("Nastech से असंबंधित स्क्रिप्ट Python 3.12 पर चलती हैं", []),
  "laptop": ("काम के लैपटॉप में सिर्फ़ 8 GB मेमोरी है, इसलिए लोकल LLM नहीं चलाते", []),
 },
 "ar": {
@@ -144,7 +144,7 @@ CORPUS = {
  "budget": ("ميزانية التسويق الشهرية 500 دولار", []),
  "dentist": ("موعد إيفا عند طبيب الأسنان في 20 أكتوبر", ["إيفا"]),
  "cat": ("قطة العائلة بريطانية قصيرة الشعر واسمها ميا", ["ميا"]),
- "python": ("السكربتات غير المتعلقة بـ Hermes تعمل على Python 3.12", []),
+ "python": ("السكربتات غير المتعلقة بـ Nastech تعمل على Python 3.12", []),
  "laptop": ("حاسوب العمل المحمول فيه 8 جيجابايت ذاكرة فقط، لذلك لا نشغّل نماذج لغوية محلية", []),
 },
 "fr": {
@@ -166,7 +166,7 @@ CORPUS = {
  "budget": ("Le budget marketing mensuel est de 500 dollars", []),
  "dentist": ("Le rendez-vous d'Eva chez le dentiste est le 20 octobre", ["Eva"]),
  "cat": ("La chatte de la famille est une British Shorthair qui s'appelle Mia", ["Mia"]),
- "python": ("Les scripts qui ne concernent pas Hermes tournent avec Python 3.12", []),
+ "python": ("Les scripts qui ne concernent pas Nastech tournent avec Python 3.12", []),
  "laptop": ("Le portable de travail n'a que 8 Go de mémoire, donc pas de LLM en local", []),
 },
 "bn": {
@@ -188,7 +188,7 @@ CORPUS = {
  "budget": ("মাসিক মার্কেটিং বাজেট 500 ডলার", []),
  "dentist": ("ইভার ডেন্টিস্ট অ্যাপয়েন্টমেন্ট 20 অক্টোবর", ["ইভা"]),
  "cat": ("পরিবারের বিড়ালটি ব্রিটিশ শর্টহেয়ার জাতের, নাম মিয়া", ["মিয়া"]),
- "python": ("Hermes-এর সাথে সম্পর্কহীন স্ক্রিপ্ট Python 3.12-এ চলে", []),
+ "python": ("Nastech-এর সাথে সম্পর্কহীন স্ক্রিপ্ট Python 3.12-এ চলে", []),
  "laptop": ("কাজের ল্যাপটপে মাত্র 8 GB মেমরি, তাই লোকাল LLM চালানো হয় না", []),
 },
 "pt": {
@@ -210,7 +210,7 @@ CORPUS = {
  "budget": ("O orçamento mensal de marketing é de 500 dólares", []),
  "dentist": ("A consulta da Eva no dentista é no dia 20 de outubro", ["Eva"]),
  "cat": ("A gata da família é uma British Shorthair chamada Mia", ["Mia"]),
- "python": ("Scripts que não são do Hermes rodam com Python 3.12", []),
+ "python": ("Scripts que não são do Nastech rodam com Python 3.12", []),
  "laptop": ("O notebook do trabalho só tem 8 GB de memória, então nada de LLM local", []),
 },
 "id": {
@@ -232,7 +232,7 @@ CORPUS = {
  "budget": ("Anggaran pemasaran bulanan adalah 500 dolar", []),
  "dentist": ("Janji Eva dengan dokter gigi pada tanggal 20 Oktober", ["Eva"]),
  "cat": ("Kucing keluarga adalah British Shorthair bernama Mia", ["Mia"]),
- "python": ("Skrip yang tidak terkait Hermes dijalankan dengan Python 3.12", []),
+ "python": ("Skrip yang tidak terkait Nastech dijalankan dengan Python 3.12", []),
  "laptop": ("Laptop kerja hanya punya memori 8 GB, jadi tidak menjalankan LLM lokal", []),
 },
 "ja": {
@@ -254,7 +254,7 @@ CORPUS = {
  "budget": ("毎月のマーケティング予算は500ドルだ", []),
  "dentist": ("エヴァの歯医者の予約は10月20日だ", ["エヴァ"]),
  "cat": ("家の猫はミアという名前のブリティッシュショートヘアだ", ["ミア"]),
- "python": ("Hermesに関係ないスクリプトはPython 3.12で動かす", []),
+ "python": ("Nastechに関係ないスクリプトはPython 3.12で動かす", []),
  "laptop": ("仕事用のノートパソコンはメモリが8GBしかないので、ローカルLLMは動かさない", []),
 },
 "ko": {
@@ -276,7 +276,7 @@ CORPUS = {
  "budget": ("월 마케팅 예산은 500달러다", []),
  "dentist": ("에바의 치과 예약은 10월 20일이다", ["에바"]),
  "cat": ("집 고양이는 미아라는 이름의 브리티시 쇼트헤어다", ["미아"]),
- "python": ("Hermes와 관련 없는 스크립트는 Python 3.12로 실행한다", []),
+ "python": ("Nastech와 관련 없는 스크립트는 Python 3.12로 실행한다", []),
  "laptop": ("업무용 노트북은 메모리가 8GB뿐이라 로컬 LLM은 돌리지 않는다", []),
 },
 "th": {
@@ -298,7 +298,7 @@ CORPUS = {
  "budget": ("งบการตลาดรายเดือนคือ 500 ดอลลาร์", []),
  "dentist": ("อีวานัดหมอฟันวันที่ 20 ตุลาคม", ["อีวา"]),
  "cat": ("แมวของครอบครัวเป็นบริติชช็อตแฮร์ชื่อมีอา", ["มีอา"]),
- "python": ("สคริปต์ที่ไม่เกี่ยวกับ Hermes รันด้วย Python 3.12", []),
+ "python": ("สคริปต์ที่ไม่เกี่ยวกับ Nastech รันด้วย Python 3.12", []),
  "laptop": ("แล็ปท็อปที่ทำงานมีแรมแค่ 8 GB เลยไม่รัน LLM ในเครื่อง", []),
 },
 "de": {
@@ -320,7 +320,7 @@ CORPUS = {
  "budget": ("Das monatliche Marketingbudget beträgt 500 Dollar", []),
  "dentist": ("Evas Zahnarzttermin ist am 20. Oktober", ["Eva"]),
  "cat": ("Die Familienkatze ist eine Britisch Kurzhaar namens Mia", ["Mia"]),
- "python": ("Skripte, die nichts mit Hermes zu tun haben, laufen mit Python 3.12", []),
+ "python": ("Skripte, die nichts mit Nastech zu tun haben, laufen mit Python 3.12", []),
  "laptop": ("Der Arbeitslaptop hat nur 8 GB Speicher, deshalb keine lokalen LLMs", []),
 },
 }

@@ -1,18 +1,18 @@
 # Holographic Memory Provider
 
-Local memory provider for [Hermes Agent](https://github.com/NousResearch/hermes-agent): a SQLite fact store with
+Local memory provider for [Nastech Agent](https://github.com/NastechResearch/nastech-agent): a SQLite fact store with
 FTS5 search, trust scoring, entity resolution and HRR (holographic reduced representation) retrieval. Everything
 stays on your machine: no API key, no network, no model calls.
 
-**Maintained by [itpartypattaya](https://github.com/itpartypattaya)** since October 2026. This is the provider that
-shipped inside Hermes core as `plugins/memory/holographic/`; Nous Research
-[handed it off](https://github.com/NousResearch/hermes-plugin-holographic/blob/main/HANDOFF.md) when the bundled
+**Maintained by [nastechtest](https://github.com/nastechtest)** since October 2026. This is the provider that
+shipped inside Nastech core as `plugins/memory/holographic/`; Nastech Research
+[handed it off](https://github.com/NastechResearch/nastech-plugin-holographic/blob/main/HANDOFF.md) when the bundled
 copy was scheduled to leave core (announced for October 15, 2026). Same provider name, same config, same database:
 users who have `memory.provider: holographic` keep their facts. See [CHANGELOG.md](CHANGELOG.md) for what changed.
 
 ## How it works
 
-![Architecture: before each turn Hermes core sends the message through the relevance gate and search; writes pass a
+![Architecture: before each turn Nastech core sends the message through the relevance gate and search; writes pass a
 validator and land in one SQLite transaction; recall tools read the same file](diagram/architecture.svg)
 
 ![Recall before a turn: greetings recall nothing; the message's words become keys; candidates come from FTS5, character
@@ -21,24 +21,24 @@ turn as data](diagram/recall.svg)
 
 ## Install
 
-While your Hermes still bundles `holographic`, the bundled copy is used and this plugin stays dormant. After core
-drops it, `hermes update` installs the catalog plugin named `holographic` for every profile that has it configured.
+While your Nastech still bundles `holographic`, the bundled copy is used and this plugin stays dormant. After core
+drops it, `nastech update` installs the catalog plugin named `holographic` for every profile that has it configured.
 To install by hand:
 
 ```bash
-hermes plugins install holographic          # from the plugin catalog
-hermes config set memory.provider holographic
+nastech plugins install holographic          # from the plugin catalog
+nastech config set memory.provider holographic
 ```
 
-or `hermes memory setup` and pick `holographic`.
+or `nastech memory setup` and pick `holographic`.
 
 ## Config
 
-In `config.yaml` under `plugins.hermes-memory-store`:
+In `config.yaml` under `plugins.nastech-memory-store`:
 
 | Key | Default | Description |
 |-----|---------|-------------|
-| `db_path` | `$HERMES_HOME/memory_store.db` | SQLite database path |
+| `db_path` | `$NASTECH_HOME/memory_store.db` | SQLite database path |
 | `auto_extract` | `false` | Store user sentences that state a preference or decision (English, Russian) at session end and before context compression, at trust 0.4 |
 | `mirror_memory_writes` | `false` | Also store every built-in memory `add` (MEMORY.md / USER.md) as a fact |
 | `default_trust` | `0.5` | Trust score of a new fact |
@@ -74,7 +74,7 @@ In `config.yaml` under `plugins.hermes-memory-store`:
   (clean-up candidates: low trust, never recalled for 60 days, near-duplicates), **enrich** (facts without keywords,
   most recalled first, to give keywords with `update`).
 - **entities** lists names with their aliases and fact counts; **alias** gives an entity a second name (or merges
-  two entities). Spelling variants are one entity (`Hermes Agent` = `hermes-agent`), and `X aka Y` makes `Y` an alias.
+  two entities). Spelling variants are one entity (`Nastech Agent` = `nastech-agent`), and `X aka Y` makes `Y` an alias.
 - **probe**: every fact linked to a named entity, from the entity index (name or alias, any letter case).
   **reason**: facts linked to *all* of several entities; when a name is not a known entity, keyword search that still
   requires every name. Entities are linked when a fact is stored: capitalized names of two to five words in any cased
@@ -189,7 +189,7 @@ They are kept with the fact's tags, searched like its text, never shown in the r
 them too. This is document expansion, as doc2query does for lexical search: the meaning is added once, when the fact
 is written, and recall stays local and deterministic. `enrich` lists the facts that have none, so the agent or a
 nightly job can add them with `update`; an update with keywords alone keeps the fact's age (`updated_at`), so old
-facts do not turn into recent ones. [hermes-dreaming](https://github.com/itpartypattaya/hermes-dreaming) does this
+facts do not turn into recent ones. [nastech-dreaming](https://github.com/nastechtest/nastech-dreaming) does this
 nightly (`keywords.enabled`).
 
 Measured on a third set per language: 8 questions that share no word with their fact except a name ("Where are we
@@ -232,8 +232,8 @@ main sets of all fourteen languages run in CI (`tests/test_holographic_languages
 
 ## Data and privacy
 
-- Facts live in one SQLite file (`db_path`), in the Hermes home of the profile, readable by its owner only (POSIX
-  `0600`). Nothing is sent anywhere. A `db_path` outside the Hermes home is listed for `hermes backup`.
+- Facts live in one SQLite file (`db_path`), in the Nastech home of the profile, readable by its owner only (POSIX
+  `0600`). Nothing is sent anywhere. A `db_path` outside the Nastech home is listed for `nastech backup`.
 - Subagents, cron jobs and flush contexts read the store but never write to it (facts, feedback, counters,
   extraction).
 - With `auto_extract` on, user messages matching the preference/decision patterns are stored at session end.
@@ -245,7 +245,7 @@ main sets of all fourteen languages run in CI (`tests/test_holographic_languages
 
 Schema changes are additive: 0.4.0 adds a `meta` table (schema version, HRR dimension), an `entity_aliases` table and
 an `entities.name_key` column; nothing older is dropped or rewritten, and the new column is nullable, so earlier
-versions (including the copy bundled in Hermes core) keep reading and writing the file. When this version opens a
+versions (including the copy bundled in Nastech core) keep reading and writing the file. When this version opens a
 file an older one wrote to, it reconciles: missing keys are filled in, entities with the same key are merged (links,
 aliases and names kept), aliases of entities the older version deleted are dropped, and vectors whose size does not
 match `hrr_dim` are re-encoded. Only a writable agent does this; subagents, cron and flush contexts never migrate.
@@ -259,14 +259,14 @@ files stay untouched (no leak), but new facts would land in the shared store.
 
 ## Development
 
-Tests import Hermes core from a checkout, as an installed plugin does:
+Tests import Nastech core from a checkout, as an installed plugin does:
 
 ```bash
-HERMES_AGENT_REPO=~/.hermes/hermes-agent PYTHONPATH=~/.hermes/hermes-agent python -m pytest -q
+NASTECH_AGENT_REPO=~/.nastech/nastech-agent PYTHONPATH=~/.nastech/nastech-agent python -m pytest -q
 ```
 
-CI runs the suite on Linux, macOS and Windows against hermes-agent `main`, plus `hermes plugins validate`, the check
+CI runs the suite on Linux, macOS and Windows against nastech-agent `main`, plus `nastech plugins validate`, the check
 the plugin catalog runs at admission. Maintenance notes are in [HANDOFF.md](HANDOFF.md).
 
-Original plugin by dusterbloom (hermes-agent PR #2351); its history is in hermes-agent
+Original plugin by dusterbloom (nastech-agent PR #2351); its history is in nastech-agent
 (`git log -- plugins/memory/holographic`). MIT licence.

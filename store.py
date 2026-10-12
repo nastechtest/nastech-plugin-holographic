@@ -1,4 +1,4 @@
-"""SQLite-backed fact store with entity resolution and trust scoring (single-user Hermes memory plugin)."""
+"""SQLite-backed fact store with entity resolution and trust scoring (single-user Nastech memory plugin)."""
 
 import contextlib
 import logging
@@ -134,7 +134,7 @@ def fold(text):
 
 def entity_key(name: str) -> str:
     """Identity key of an entity name: NFKC, casefold, hyphens/underscores as spaces, whitespace collapsed, edge
-    punctuation stripped. "Hermes Agent", "hermes-agent" and "HERMES  AGENT" are one entity; "coop" and "co-op" are
+    punctuation stripped. "Nastech Agent", "nastech-agent" and "NASTECH  AGENT" are one entity; "coop" and "co-op" are
     not merged into each other (a hyphen becomes a space, it is not deleted)."""
     text = unicodedata.normalize("NFKC", name or "").casefold().replace("-", " ").replace("_", " ")
     return " ".join(text.split()).strip(" .,;:!?'\"«»“”„")
@@ -224,8 +224,8 @@ class MemoryStore:
     def __init__(self, db_path: "str | Path | None" = None, default_trust: float = 0.5, hrr_dim: int = 1024, *,
                  migrate: bool = True) -> None:
         if db_path is None:
-            from hermes_constants import get_hermes_home
-            db_path = str(get_hermes_home() / "memory_store.db")
+            from nastech_constants import get_nastech_home
+            db_path = str(get_nastech_home() / "memory_store.db")
         self.db_path = Path(db_path).expanduser()
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
         self.default_trust, self.hrr_dim, self._hrr_available = _clamp_trust(default_trust), hrr_dim, hrr._HAS_NUMPY
@@ -263,11 +263,11 @@ class MemoryStore:
     def _init_db(self) -> None:
         """Create schema, enable WAL via the shared fallback helper (NFS/SMB/FUSE degrade gracefully), add hrr_vector
         to pre-HRR DBs, and narrow the FTS update trigger of DBs created by older versions."""
-        from hermes_state_wal import apply_wal_with_fallback
+        from nastech_state_wal import apply_wal_with_fallback
         apply_wal_with_fallback(self._conn, db_label="memory_store.db (holographic)")
         self._conn.executescript(_SCHEMA)
         if "hrr_vector" not in {row[1] for row in self._conn.execute("PRAGMA table_info(facts)").fetchall()}:
-            from hermes_cli.sqlite_util import add_column_if_missing
+            from nastech_cli.sqlite_util import add_column_if_missing
             add_column_if_missing(self._conn, "facts", "hrr_vector", "hrr_vector BLOB")
         trigger = self._one("SELECT sql FROM sqlite_master WHERE type = 'trigger' AND name = 'facts_au'")
         if trigger is not None and "UPDATE OF" not in (trigger["sql"] or "").upper():

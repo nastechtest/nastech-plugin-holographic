@@ -26,7 +26,7 @@ from agent.context_compressor import (
     _MERGED_SUMMARY_DELIMITER,
     is_compaction_summary_message,
 )
-from hermes_plugin_holographic import HolographicMemoryProvider
+from nastech_plugin_holographic import HolographicMemoryProvider
 
 
 def _make_provider(tmp_path, **config):

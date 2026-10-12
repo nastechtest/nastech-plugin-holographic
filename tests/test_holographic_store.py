@@ -16,7 +16,7 @@ import threading
 
 import pytest
 
-from hermes_plugin_holographic.store import MemoryStore
+from nastech_plugin_holographic.store import MemoryStore
 
 @pytest.fixture(autouse=True)
 def _clean_shared_registry():
@@ -88,7 +88,7 @@ class TestSharedConnection:
         a = MemoryStore(db_path)
         b = MemoryStore(db_path)
         try:
-            fact_id = a.add_fact("Hermes likes shared connections", category="test")
+            fact_id = a.add_fact("Nastech likes shared connections", category="test")
             facts = b.list_facts(category="test")
             assert [f["fact_id"] for f in facts] == [fact_id]
         finally:

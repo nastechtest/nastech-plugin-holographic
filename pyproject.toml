@@ -1,11 +1,11 @@
 [project]
-name = "hermes-plugin-holographic"
+name = "nastech-plugin-holographic"
 version = "0.7.0"
-description = "Hermes Agent memory provider plugin: holographic"
+description = "Nastech Agent memory provider plugin: holographic"
 requires-python = ">=3.11"
 license = { text = "MIT" }
-# Installed into the Hermes venv by `hermes plugins install` / `enable` and re-applied after
-# every `hermes update` (hermes-agent#113851). Keep upper bounds: Hermes pins its own deps exactly
+# Installed into the Nastech venv by `nastech plugins install` / `enable` and re-applied after
+# every `nastech update` (nastech-agent#113851). Keep upper bounds: Nastech pins its own deps exactly
 # and refuses a plugin whose requirements cannot resolve against them.
 dependencies = [
     "numpy>=1.26,<3",
