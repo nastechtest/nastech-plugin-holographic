@@ -21,7 +21,7 @@ from nastech_plugin_holographic.retrieval import FactRetriever
 from nastech_plugin_holographic.store import MemoryStore
 
 REPO = Path(__file__).resolve().parent.parent
-OLD_TAG = "v.0.1.1"
+OLD_TAG = "v0.1.1"
 DIM = 256
 
 
