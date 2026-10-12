@@ -28,7 +28,10 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: NastechResearch/nastech-agent
+          ref: 44575837031d3b7969f39417adb341d0c8048662
           path: nastech-agent
+      - name: Show Nastech core revision
+        run: git -C nastech-agent rev-parse HEAD
       # Nastech core gates every runtime dependency on python_version >= '3.14'; older Pythons install none of them.
       - uses: actions/setup-python@v5
         with:
@@ -55,7 +58,10 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: NastechResearch/nastech-agent
+          ref: 44575837031d3b7969f39417adb341d0c8048662
           path: nastech-agent
+      - name: Show Nastech core revision
+        run: git -C nastech-agent rev-parse HEAD
       - uses: actions/setup-python@v5
         with:
           python-version: "3.14"
