@@ -35,7 +35,7 @@ def old(tmp_path_factory):
         unavailable("git not available")
     pkg = tmp_path_factory.mktemp("old") / "holo_v011"
     pkg.mkdir()
-    for name in ("store.py", "retrieval.py", "holographic.py"):
+    for name in ("store.py", "retrieval.py", "holographic.py", "text.py"):
         shown = subprocess.run(["git", "-C", str(REPO), "show", f"{OLD_TAG}:{name}"], capture_output=True)
         if shown.returncode != 0:
             unavailable(f"tag {OLD_TAG} not available (fetch tags to run this test)")
